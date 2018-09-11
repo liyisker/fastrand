@@ -254,6 +254,29 @@ func TestPerm(t *testing.T) {
 	}
 }
 
+// TestShuffle tests the Shuffle function.
+func TestShuffle(t *testing.T) {
+	chars := "abcde" // string to be permuted
+	createPerm := func() string {
+		s := []byte(chars)
+		Shuffle(len(s), func(i, j int) { s[i], s[j] = s[j], s[i] })
+		return string(s)
+	}
+
+	// create (factorial(len(chars)) * 100) permutations
+	permCount := make(map[string]int)
+	for i := 0; i < 12000; i++ {
+		permCount[createPerm()]++
+	}
+
+	// we should have seen each permutation approx. 100 times
+	for p, n := range permCount {
+		if n < 50 || n > 150 {
+			t.Errorf("saw permutation %v times: %v", n, p)
+		}
+	}
+}
+
 // BenchmarkUint64n benchmarks the Uint64n function for small uint64s.
 func BenchmarkUint64n(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -327,6 +350,22 @@ func BenchmarkPerm32(b *testing.B) {
 func BenchmarkPermLarge4k(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Perm(4e3)
+	}
+}
+
+// BenchmarkShuffle benchmarks the speed of Shuffle for small slices.
+func BenchmarkShuffle32(b *testing.B) {
+	buf := make([]byte, 32)
+	for i := 0; i < b.N; i++ {
+		Shuffle(len(buf), func(i, j int) { buf[i], buf[j] = buf[j], buf[i] })
+	}
+}
+
+// BenchmarkShuffleLarge benchmarks the speed of Shuffle for large slices.
+func BenchmarkShuffleLarge4k(b *testing.B) {
+	buf := make([]byte, 4e3)
+	for i := 0; i < b.N; i++ {
+		Shuffle(len(buf), func(i, j int) { buf[i], buf[j] = buf[j], buf[i] })
 	}
 }
 

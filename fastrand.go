@@ -172,3 +172,16 @@ func Perm(n int) []int {
 	}
 	return m
 }
+
+// Shuffle randomizes the order of elements. n is the number of elements. It
+// panics if n < 0. swap swaps the elements with indexes i and j.
+func Shuffle(n int, swap func(i, j int)) {
+	if n < 0 {
+		panic("fastrand: argument to Shuffle is < 0")
+	}
+	// Fisher-Yates
+	for i := n - 1; i > 0; i-- {
+		j := Intn(i + 1)
+		swap(i, j)
+	}
+}
