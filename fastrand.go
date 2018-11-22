@@ -13,7 +13,6 @@ package fastrand
 import (
 	"crypto/rand"
 	"encoding/binary"
-	"io"
 	"math"
 	"math/big"
 	"strconv"
@@ -35,7 +34,7 @@ type randReader struct {
 // Reader is a global, shared instance of a cryptographically strong pseudo-
 // random generator. It uses blake2b as its hashing function. Reader is safe
 // for concurrent use by multiple goroutines.
-var Reader io.Reader
+var Reader *randReader
 
 // init provides the initial entropy for the reader that will seed all numbers
 // coming out of fastrand.
