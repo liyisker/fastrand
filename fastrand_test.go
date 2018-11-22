@@ -279,6 +279,7 @@ func TestShuffle(t *testing.T) {
 
 // BenchmarkUint64n benchmarks the Uint64n function for small uint64s.
 func BenchmarkUint64n(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_ = Uint64n(4e3)
 	}
@@ -286,6 +287,7 @@ func BenchmarkUint64n(b *testing.B) {
 
 // BenchmarkUint64nLarge benchmarks the Uint64n function for large uint64s.
 func BenchmarkUint64nLarge(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		// constant chosen to trigger resampling (see Uint64n)
 		_ = Uint64n(math.MaxUint64/2 + 1)
@@ -294,6 +296,7 @@ func BenchmarkUint64nLarge(b *testing.B) {
 
 // BenchmarkIntn benchmarks the Intn function for small ints.
 func BenchmarkIntn(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_ = Intn(4e3)
 	}
@@ -301,6 +304,7 @@ func BenchmarkIntn(b *testing.B) {
 
 // BenchmarkIntnLarge benchmarks the Intn function for large ints.
 func BenchmarkIntnLarge(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		// constant chosen to trigger resampling (see Intn)
 		_ = Intn(math.MaxUint64/4 + 1)
@@ -309,6 +313,7 @@ func BenchmarkIntnLarge(b *testing.B) {
 
 // BenchmarkBigIntn benchmarks the BigIntn function for small ints.
 func BenchmarkBigIntn(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_ = BigIntn(big.NewInt(4e3))
 	}
@@ -316,6 +321,7 @@ func BenchmarkBigIntn(b *testing.B) {
 
 // BenchmarkBigIntnLarge benchmarks the BigIntn function for large ints.
 func BenchmarkBigIntnLarge(b *testing.B) {
+	b.ReportAllocs()
 	// (2^63)^10
 	huge := new(big.Int).Exp(big.NewInt(math.MaxInt64), big.NewInt(10), nil)
 	for i := 0; i < b.N; i++ {
@@ -325,6 +331,7 @@ func BenchmarkBigIntnLarge(b *testing.B) {
 
 // BenchmarkBigCryptoInt benchmarks the (crypto/rand).Int function for small ints.
 func BenchmarkBigCryptoInt(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_, _ = rand.Int(rand.Reader, big.NewInt(4e3))
 	}
@@ -332,6 +339,7 @@ func BenchmarkBigCryptoInt(b *testing.B) {
 
 // BenchmarkBigCryptoIntLarge benchmarks the (crypto/rand).Int function for large ints.
 func BenchmarkBigCryptoIntLarge(b *testing.B) {
+	b.ReportAllocs()
 	// (2^63)^10
 	huge := new(big.Int).Exp(big.NewInt(math.MaxInt64), big.NewInt(10), nil)
 	for i := 0; i < b.N; i++ {
@@ -341,6 +349,7 @@ func BenchmarkBigCryptoIntLarge(b *testing.B) {
 
 // BenchmarkPerm benchmarks the speed of Perm for small slices.
 func BenchmarkPerm32(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		Perm(32)
 	}
@@ -348,6 +357,7 @@ func BenchmarkPerm32(b *testing.B) {
 
 // BenchmarkPermLarge benchmarks the speed of Perm for large slices.
 func BenchmarkPermLarge4k(b *testing.B) {
+	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		Perm(4e3)
 	}
@@ -355,6 +365,7 @@ func BenchmarkPermLarge4k(b *testing.B) {
 
 // BenchmarkShuffle benchmarks the speed of Shuffle for small slices.
 func BenchmarkShuffle32(b *testing.B) {
+	b.ReportAllocs()
 	buf := make([]byte, 32)
 	for i := 0; i < b.N; i++ {
 		Shuffle(len(buf), func(i, j int) { buf[i], buf[j] = buf[j], buf[i] })
@@ -363,6 +374,7 @@ func BenchmarkShuffle32(b *testing.B) {
 
 // BenchmarkShuffleLarge benchmarks the speed of Shuffle for large slices.
 func BenchmarkShuffleLarge4k(b *testing.B) {
+	b.ReportAllocs()
 	buf := make([]byte, 4e3)
 	for i := 0; i < b.N; i++ {
 		Shuffle(len(buf), func(i, j int) { buf[i], buf[j] = buf[j], buf[i] })
@@ -371,6 +383,7 @@ func BenchmarkShuffleLarge4k(b *testing.B) {
 
 // BenchmarkRead benchmarks the speed of Read for small slices.
 func BenchmarkRead32(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(32)
 	buf := make([]byte, 32)
 	for i := 0; i < b.N; i++ {
@@ -380,6 +393,7 @@ func BenchmarkRead32(b *testing.B) {
 
 // BenchmarkRead512kb benchmarks the speed of Read for larger slices.
 func BenchmarkRead512kb(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(512e3)
 	buf := make([]byte, 512e3)
 	for i := 0; i < b.N; i++ {
@@ -390,6 +404,7 @@ func BenchmarkRead512kb(b *testing.B) {
 // BenchmarkRead4Threads32 benchmarks the speed of Read when it's being using
 // across four threads.
 func BenchmarkRead4Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -415,6 +430,7 @@ func BenchmarkRead4Threads32(b *testing.B) {
 // BenchmarkRead4Threads512kb benchmarks the speed of Read when it's being using
 // across four threads with 512kb read sizes.
 func BenchmarkRead4Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -440,6 +456,7 @@ func BenchmarkRead4Threads512kb(b *testing.B) {
 // BenchmarkRead64Threads32 benchmarks the speed of Read when it's being using
 // across 64 threads.
 func BenchmarkRead64Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
@@ -465,6 +482,7 @@ func BenchmarkRead64Threads32(b *testing.B) {
 // BenchmarkRead64Threads512kb benchmarks the speed of Read when it's being using
 // across 64 threads with 512kb read sizes.
 func BenchmarkRead64Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
@@ -490,6 +508,7 @@ func BenchmarkRead64Threads512kb(b *testing.B) {
 // BenchmarkReadCrypto benchmarks the speed of (crypto/rand).Read for small
 // slices. This establishes a lower limit for BenchmarkRead32.
 func BenchmarkReadCrypto32(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(32)
 	buf := make([]byte, 32)
 	for i := 0; i < b.N; i++ {
@@ -500,6 +519,7 @@ func BenchmarkReadCrypto32(b *testing.B) {
 // BenchmarkReadCrypto512kb benchmarks the speed of (crypto/rand).Read for larger
 // slices. This establishes a lower limit for BenchmarkRead512kb.
 func BenchmarkReadCrypto512kb(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(512e3)
 	buf := make([]byte, 512e3)
 	for i := 0; i < b.N; i++ {
@@ -510,6 +530,7 @@ func BenchmarkReadCrypto512kb(b *testing.B) {
 // BenchmarkReadCrypto4Threads32 benchmarks the speed of rand.Read when its
 // being used across 4 threads with 32 byte read sizes.
 func BenchmarkReadCrypto4Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -538,6 +559,7 @@ func BenchmarkReadCrypto4Threads32(b *testing.B) {
 // BenchmarkReadCrypto4Threads512kb benchmarks the speed of rand.Read when its
 // being used across 4 threads with 512 kb read sizes.
 func BenchmarkReadCrypto4Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -566,6 +588,7 @@ func BenchmarkReadCrypto4Threads512kb(b *testing.B) {
 // BenchmarkReadCrypto64Threads32 benchmarks the speed of rand.Read when its
 // being used across 4 threads with 32 byte read sizes.
 func BenchmarkReadCrypto64Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
@@ -594,6 +617,7 @@ func BenchmarkReadCrypto64Threads32(b *testing.B) {
 // BenchmarkReadCrypto64Threads512k benchmarks the speed of rand.Read when its
 // being used across 4 threads with 512 kb read sizes.
 func BenchmarkReadCrypto64Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
@@ -622,6 +646,7 @@ func BenchmarkReadCrypto64Threads512kb(b *testing.B) {
 // BenchmarkReadMath benchmarks the speed of (math/rand).Read for small
 // slices. This establishes an upper limit for BenchmarkRead32.
 func BenchmarkReadMath32(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(32)
 	buf := make([]byte, 32)
 	for i := 0; i < b.N; i++ {
@@ -632,6 +657,7 @@ func BenchmarkReadMath32(b *testing.B) {
 // BenchmarkReadMath512kb benchmarks the speed of (math/rand).Read for larger
 // slices. This establishes an upper limit for BenchmarkRead512kb.
 func BenchmarkReadMath512kb(b *testing.B) {
+	b.ReportAllocs()
 	b.SetBytes(512e3)
 	buf := make([]byte, 512e3)
 	for i := 0; i < b.N; i++ {
@@ -642,6 +668,7 @@ func BenchmarkReadMath512kb(b *testing.B) {
 // BenchmarkReadMath4Threads32 benchmarks the speed of ReadMath when it's being using
 // across four threads.
 func BenchmarkReadMath4Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -667,6 +694,7 @@ func BenchmarkReadMath4Threads32(b *testing.B) {
 // BenchmarkReadMath4Threads512kb benchmarks the speed of ReadMath when it's being using
 // across four threads with 512kb read sizes.
 func BenchmarkReadMath4Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
@@ -692,6 +720,7 @@ func BenchmarkReadMath4Threads512kb(b *testing.B) {
 // BenchmarkReadMath64Threads32 benchmarks the speed of ReadMath when it's being using
 // across 64 threads.
 func BenchmarkReadMath64Threads32(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
@@ -717,6 +746,7 @@ func BenchmarkReadMath64Threads32(b *testing.B) {
 // BenchmarkReadMath64Threads512kb benchmarks the speed of ReadMath when it's being using
 // across 64 threads with 512kb read sizes.
 func BenchmarkReadMath64Threads512kb(b *testing.B) {
+	b.ReportAllocs()
 	start := make(chan struct{})
 	var wg sync.WaitGroup
 	for i := 0; i < 64; i++ {
