@@ -135,11 +135,11 @@ func Uint64n(n uint64) uint64 {
 	//    n = math.MaxUint64/2 + 1 -> max = math.MaxUint64 - math.MaxUint64/2
 	// This gives an expected 2 tries before choosing a value < max.
 	max := math.MaxUint64 - math.MaxUint64%n
-	b := Bytes(8)
-	r := *(*uint64)(unsafe.Pointer(&b[0]))
+	var r uint64
+	b := (*[8]byte)(unsafe.Pointer(&r))[:]
+	Read(b)
 	for r >= max {
 		Read(b)
-		r = *(*uint64)(unsafe.Pointer(&b[0]))
 	}
 	return r % n
 }
