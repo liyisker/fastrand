@@ -5,7 +5,7 @@ fastrand
 [![Go Report Card](http://goreportcard.com/badge/gitlab.com/NebulousLabs/fastrand)](https://goreportcard.com/report/gitlab.com/NebulousLabs/fastrand)
 
 ```
-go get gitlab.com/NebulousLabs/fastrand
+go get https://github.com/liyisker/fastrand
 ```
 
 `fastrand` implements a cryptographically secure pseudorandom number generator.
