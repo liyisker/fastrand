@@ -13,7 +13,6 @@ package fastrand
 import (
 	"crypto/rand"
 	"encoding/binary"
-	"io"
 	"math"
 	"math/big"
 	"strconv"
@@ -35,7 +34,7 @@ type randReader struct {
 // Reader is a global, shared instance of a cryptographically strong pseudo-
 // random generator. It uses blake2b as its hashing function. Reader is safe
 // for concurrent use by multiple goroutines.
-var Reader io.Reader
+var Reader *randReader
 
 // init provides the initial entropy for the reader that will seed all numbers
 // coming out of fastrand.
@@ -136,11 +135,11 @@ func Uint64n(n uint64) uint64 {
 	//    n = math.MaxUint64/2 + 1 -> max = math.MaxUint64 - math.MaxUint64/2
 	// This gives an expected 2 tries before choosing a value < max.
 	max := math.MaxUint64 - math.MaxUint64%n
-	b := Bytes(8)
-	r := *(*uint64)(unsafe.Pointer(&b[0]))
+	var r uint64
+	b := (*[8]byte)(unsafe.Pointer(&r))[:]
+	Read(b)
 	for r >= max {
 		Read(b)
-		r = *(*uint64)(unsafe.Pointer(&b[0]))
 	}
 	return r % n
 }
@@ -171,4 +170,17 @@ func Perm(n int) []int {
 		m[j] = i
 	}
 	return m
+}
+
+// Shuffle randomizes the order of elements. n is the number of elements. It
+// panics if n < 0. swap swaps the elements with indexes i and j.
+func Shuffle(n int, swap func(i, j int)) {
+	if n < 0 {
+		panic("fastrand: argument to Shuffle is < 0")
+	}
+	// Fisher-Yates
+	for i := n - 1; i > 0; i-- {
+		j := Intn(i + 1)
+		swap(i, j)
+	}
 }
